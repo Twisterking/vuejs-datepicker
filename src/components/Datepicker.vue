@@ -29,7 +29,7 @@
     </div>
 
         <!-- Day View -->
-        <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" v-bind:style="calendarStyle">
+        <div v-if="!monthYearViewOnly" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" v-bind:style="calendarStyle">
             <header>
                 <span
                     @click="isRtl ? nextMonth() : previousMonth()"
@@ -140,7 +140,8 @@ export default {
     },
     disabledPicker: Boolean,
     required: Boolean,
-    dayViewOnly: Boolean
+    dayViewOnly: Boolean,
+    monthYearViewOnly: Boolean
   },
   data () {
     return {
@@ -394,6 +395,10 @@ export default {
       }
       const date = new Date(month.timestamp)
       this.setPageDate(date)
+      if (this.monthYearViewOnly) {
+        this.setDate(month.timestamp)
+        return this.close()
+      }
       this.showDayCalendar()
       this.$emit('changedMonth', month)
     },
